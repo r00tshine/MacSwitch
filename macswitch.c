@@ -1,6 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdbool.h>
+
+void check_dependencies(bool macchanger_exists)
+{
+  if (macchanger_exists == 0)  {
+    // Carry on
+  } else {
+    system("apt-get install -y macchanger");
+  }  
+}
 
 int main(int argc, char *argv[])
 {
@@ -19,11 +29,12 @@ int main(int argc, char *argv[])
     {
       system("ifconfig wlan0 down && macchanger -p wlan0 >/dev/null && ifconfig wlan0 up");
       printf("[MacSwitch] Your MAC Address has been reset!\n");
-      system("pkill -f -9 switchdamac");
+      system("pkill -f -9 macswitch");
     }
     changer(amount);
     reset();
   }
+  check_dependencies(system("which macchanger > /dev/null 2>&1"));
   int amount = atoi(argv[1]);
   mac_changer(amount);
 }
